@@ -1,19 +1,18 @@
+import AppointmentForm from "@/components/forms/AppointmentForm";
 import PatientForm from "@/components/forms/PatientForm";
-import PassKey from "@/components/PassKey";
 import { Button } from "@/components/ui/button";
+import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import Link from "next/link";
 
 
-export default function Home({searchParams}: SearchParamProps) {
-  const isAdmin = searchParams.admin === 'true';
-  
+const Appointment = async({ params: {userId} }: SearchParamProps) => {
+  const patient = await getPatient(userId)
   return (
     <div className="flex h-screen max-h-screen">
-      <section className="remove-scrollbar container my-auto">
-      {isAdmin && (<PassKey/>)}
+      <section className="remove-scrollbar container">
 
-            <div className="sub-container max-w-[496px]">
+            <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
 
                 <Image
                   src="/assets/icons/logo-full.svg"
@@ -23,24 +22,28 @@ export default function Home({searchParams}: SearchParamProps) {
                   className="mb-12 h-10 w-fit"
 
                 />
-              <PatientForm/>
+              <AppointmentForm 
+              type="create"
+              userId={userId}
+              patientId={patient.$id}
+              />
 
-              <div className="text-24-regular mt-20 flex justify-between">
+             
                 <p className="justify-items-end text-dark-600 xl:text-left">&copy; 2024 CarePulse</p>
-                <Link href="/?admin=true" className="text-green-500">Admin</Link>
-              </div>
-
+              
             </div>
 
       </section>
       <Image 
-      src="/assets/images/onboarding-img.png"
+      src="/assets/images/appointment-img.png"
       height={1000}
       width={1000}
       alt="patient"
-      className="side-img max-w-[50%]"
+      className="side-img max-w-[390px]"
       
       />
     </div>
   );
 }
+
+export default Appointment
